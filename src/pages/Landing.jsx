@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const styles = {
@@ -31,58 +32,44 @@ const styles = {
     justifyContent: 'center',
     maxWidth: '720px',
   },
-  card: {
-    width: '200px',
-    padding: '1.5rem',
-    borderRadius: '12px',
-    border: '1px solid #e2e8f0',
-    background: '#fff',
-    cursor: 'pointer',
-    transition: 'all 0.15s ease',
-    textAlign: 'center',
-  },
-  cardHover: {
-    borderColor: '#7dd3fc',
-    boxShadow: '0 4px 12px rgba(2,132,199,0.12)',
-  },
-  cardDisabled: {
-    width: '200px',
-    padding: '1.5rem',
-    borderRadius: '12px',
-    border: '1px solid #e2e8f0',
-    background: '#f1f5f9',
-    cursor: 'not-allowed',
-    textAlign: 'center',
-    opacity: 0.6,
-  },
-  cardTitle: {
-    fontSize: '1.05rem',
-    fontWeight: 600,
-    color: '#0f172a',
-    marginBottom: '0.25rem',
-  },
-  cardTitleDisabled: {
-    fontSize: '1.05rem',
-    fontWeight: 600,
-    color: '#94a3b8',
-    marginBottom: '0.25rem',
-  },
-  badge: {
-    display: 'inline-block',
-    fontSize: '0.7rem',
-    fontWeight: 600,
-    color: '#94a3b8',
-    background: '#f1f5f9',
-    padding: '2px 8px',
-    borderRadius: '9999px',
-    marginTop: '0.5rem',
-  },
   footer: {
     marginTop: '3rem',
     fontSize: '0.8rem',
     color: '#94a3b8',
   },
 };
+
+const MODULES = [
+  { path: '/adulto', icon: '\ud83e\uddd1', label: 'Adulto general' },
+  { path: '/oncologia', icon: '\ud83c\udf97\ufe0f', label: 'Oncología' },
+  { path: '/pediatrico', icon: '\ud83d\udc76', label: 'Pediátrico' },
+];
+
+function ModuleCard({ icon, label, onClick }) {
+  const [hover, setHover] = useState(false);
+
+  return (
+    <div
+      style={{
+        width: '200px',
+        padding: '1.5rem',
+        borderRadius: '12px',
+        border: `1px solid ${hover ? '#7dd3fc' : '#e2e8f0'}`,
+        background: '#fff',
+        cursor: 'pointer',
+        transition: 'all 0.15s ease',
+        textAlign: 'center',
+        boxShadow: hover ? '0 4px 12px rgba(2,132,199,0.12)' : 'none',
+      }}
+      onClick={onClick}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+    >
+      <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>{icon}</div>
+      <div style={{ fontSize: '1.05rem', fontWeight: 600, color: '#0f172a' }}>{label}</div>
+    </div>
+  );
+}
 
 export default function Landing() {
   const navigate = useNavigate();
@@ -93,53 +80,9 @@ export default function Landing() {
       <p style={styles.subtitle}>Soporte a la decisión clínica — guías MAGIC 2015</p>
 
       <div style={styles.grid}>
-        <div
-          style={styles.card}
-          onClick={() => navigate('/adulto')}
-          onMouseEnter={e => {
-            e.currentTarget.style.borderColor = '#7dd3fc';
-            e.currentTarget.style.boxShadow = '0 4px 12px rgba(2,132,199,0.12)';
-          }}
-          onMouseLeave={e => {
-            e.currentTarget.style.borderColor = '#e2e8f0';
-            e.currentTarget.style.boxShadow = 'none';
-          }}
-        >
-          <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🧑</div>
-          <div style={styles.cardTitle}>Adulto general</div>
-        </div>
-
-        <div
-          style={styles.card}
-          onClick={() => navigate('/oncologia')}
-          onMouseEnter={e => {
-            e.currentTarget.style.borderColor = '#7dd3fc';
-            e.currentTarget.style.boxShadow = '0 4px 12px rgba(2,132,199,0.12)';
-          }}
-          onMouseLeave={e => {
-            e.currentTarget.style.borderColor = '#e2e8f0';
-            e.currentTarget.style.boxShadow = 'none';
-          }}
-        >
-          <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🎗️</div>
-          <div style={styles.cardTitle}>Oncología</div>
-        </div>
-
-        <div
-          style={styles.card}
-          onClick={() => navigate('/pediatrico')}
-          onMouseEnter={e => {
-            e.currentTarget.style.borderColor = '#7dd3fc';
-            e.currentTarget.style.boxShadow = '0 4px 12px rgba(2,132,199,0.12)';
-          }}
-          onMouseLeave={e => {
-            e.currentTarget.style.borderColor = '#e2e8f0';
-            e.currentTarget.style.boxShadow = 'none';
-          }}
-        >
-          <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>👶</div>
-          <div style={styles.cardTitle}>Pediátrico</div>
-        </div>
+        {MODULES.map(m => (
+          <ModuleCard key={m.path} icon={m.icon} label={m.label} onClick={() => navigate(m.path)} />
+        ))}
       </div>
 
       <div style={styles.footer}>v2.0</div>
