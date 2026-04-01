@@ -62,7 +62,7 @@ export default function Oncologia() {
     return decidirOncologia({
       duracion,
       tipoCancer,
-      urgenciaInicio: showUrgencia ? urgenciaInicio : null,
+      urgenciaInicio: showUrgencia ? (urgenciaInicio ? 'URG1' : 'URG0') : null,
       nptOsmExtrema: nptOsmExtrema === true,
       incompatibles: incompatibles === true,
     });
@@ -113,11 +113,11 @@ export default function Oncologia() {
             </QuestionCard>
           )}
 
-          <QuestionCard label="P4" title="¿NPT o pH/osmolaridad extrema?">
+          <QuestionCard label={showUrgencia ? 'P4' : 'P3'} title="¿NPT o pH/osmolaridad extrema?">
             <ToggleButtons value={nptOsmExtrema} onSelect={setNptOsmExtrema} />
           </QuestionCard>
 
-          <QuestionCard label="P5" title="¿Infusiones incompatibles simultáneas?">
+          <QuestionCard label={showUrgencia ? 'P5' : 'P4'} title="¿Infusiones incompatibles simultáneas?">
             <ToggleButtons value={incompatibles} onSelect={setIncompatibles} />
           </QuestionCard>
 
