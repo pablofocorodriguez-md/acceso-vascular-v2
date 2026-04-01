@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { decidirAdulto } from '../logic/decidirAdulto';
 
@@ -402,11 +402,11 @@ export default function Adulto() {
 
   const [isMobile, setIsMobile] = useState(window.innerWidth < MOBILE_BREAKPOINT);
 
-  useState(() => {
+  useEffect(() => {
     const handler = () => setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
     window.addEventListener('resize', handler);
     return () => window.removeEventListener('resize', handler);
-  });
+  }, []);
 
   const toggleTerapia = (val) => {
     setTerapias(prev =>
