@@ -115,10 +115,20 @@ export default function Landing() {
           <span style={styles.badge}>Próximamente</span>
         </div>
 
-        <div style={styles.cardDisabled}>
-          <div style={{ fontSize: '2rem', marginBottom: '0.5rem', filter: 'grayscale(1)' }}>👶</div>
-          <div style={styles.cardTitleDisabled}>Pediátrico</div>
-          <span style={styles.badge}>Próximamente</span>
+        <div
+          style={styles.card}
+          onClick={() => navigate('/pediatrico')}
+          onMouseEnter={e => {
+            e.currentTarget.style.borderColor = '#7dd3fc';
+            e.currentTarget.style.boxShadow = '0 4px 12px rgba(2,132,199,0.12)';
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.borderColor = '#e2e8f0';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
+        >
+          <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>👶</div>
+          <div style={styles.cardTitle}>Pediátrico</div>
         </div>
       </div>
 
