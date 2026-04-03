@@ -4,7 +4,7 @@ const DL_WARNING = `Verificar antes de solicitar doble lumen:
 3. ¿No existe alternativa viable?
 El doble lumen no debe usarse por default.`;
 
-const HEME_NOTE = 'En la versión 2.0 la lógica hematológica está simplificada en una sola rama. Los subgrupos específicos de MAGIC-ONC 2025 aún no se incorporan al cuestionario.';
+const HEME_NOTE = 'Lógica hematológica simplificada (v2.0). Importante: en MDS/MPN, MAGIC-ONC 2025 recomienda lumen simple (no doble). Verificar subgrupo antes de definir número de lúmenes.';
 
 const NPT_NOTE = 'NPT / osmolaridad extrema: requiere acceso central independientemente de la duración. Continuar evaluación por la lógica central del adulto general.';
 
@@ -48,7 +48,9 @@ function applyTransversalWarnings(result, input) {
         ? `${result.alt}. PICC o CVC según disponibilidad; VVP y midline contraindicados.`
         : 'PICC o CVC según disponibilidad; VVP y midline contraindicados';
     }
-    result.source = 'MAGIC 2015; ASPEN 2016';
+    result.source = result.source
+      ? `${result.source}; MAGIC 2015; ASPEN 2016`
+      : 'MAGIC 2015; ASPEN 2016';
   }
 
   if (urgenciaInicio === 'URG1' && result.alt && result.alt.toLowerCase().includes('port')) {
@@ -67,10 +69,14 @@ export function decidirOncologia(input) {
 
   // Cánceres hematológicos (rama simplificada v2.0)
   if (tipoCancer === 'ONC_H') {
-    result.main = 'PICC doble lumen o catéter tunelizado';
-    result.servicio = 'Angiografía / Cirugía';
-    result.alt = 'Port solo en contexto no urgente';
-    result.note = 'PIV y midline son inapropiados en prácticamente todos los escenarios hematológicos.';
+    result.main = 'PICC o cat\u00e9ter tunelizado';
+    result.servicio = 'Angiograf\u00eda / Cirug\u00eda';
+    if (urgenciaInicio === 'URG1') {
+      result.alt = 'Port es inapropiado en urgencia hematol\u00f3gica';
+    } else {
+      result.alt = 'Port solo en contexto no urgente';
+    }
+    result.note = 'PIV y midline son inapropiados en pr\u00e1cticamente todos los escenarios hematol\u00f3gicos.\n\nL\u00famenes: leucemias agudas y linfomas \u2192 doble lumen. MDS/MPN \u2192 simple lumen (MAGIC-ONC 2025, Fig 2 y 4). Verificar subgrupo.';
     result.source = 'MAGIC-ONC 2025';
     result.incluyePICC = true;
     applyTransversalWarnings(result, input);
@@ -97,7 +103,7 @@ export function decidirOncologia(input) {
   if (tipoCancer === 'ONC_S' && urgenciaInicio === 'URG0' && duracion === 'D3') {
     result.main = 'PICC';
     result.servicio = 'Angiografía';
-    result.alt = 'Port, si se anticipa continuación > 3 meses';
+    result.alt = 'Port o tunelizado, si se anticipa continuación > 3 meses';
     result.source = 'MAGIC-ONC 2025; MAGIC 2015';
     result.incluyePICC = true;
     applyTransversalWarnings(result, input);
@@ -108,7 +114,8 @@ export function decidirOncologia(input) {
   if (tipoCancer === 'ONC_S' && urgenciaInicio === 'URG0' && (duracion === 'D1' || duracion === 'D2')) {
     result.main = 'PICC';
     result.servicio = 'Angiografía';
-    result.note = 'La quimioterapia requiere acceso central independientemente de la duración.';
+    result.alt = 'Port o tunelizado, si se anticipa tratamiento futuro';
+    result.note = 'La quimioterapia requiere acceso central independientemente de la duración. Port y tunelizado son apropiados en todos los escenarios de tumor sólido (MAGIC-ONC 2025, Fig 3).';
     result.source = 'MAGIC-ONC 2025; MAGIC 2015';
     result.incluyePICC = true;
     applyTransversalWarnings(result, input);

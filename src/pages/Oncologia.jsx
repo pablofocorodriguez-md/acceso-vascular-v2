@@ -44,7 +44,7 @@ export default function Oncologia() {
     return () => window.removeEventListener('resize', handler);
   }, []);
 
-  const showUrgencia = tipoCancer === 'ONC_S';
+  const showUrgencia = tipoCancer !== null;
   const totalQuestions = showUrgencia ? 5 : 4;
 
   const completedCount = [
@@ -62,7 +62,7 @@ export default function Oncologia() {
     return decidirOncologia({
       duracion,
       tipoCancer,
-      urgenciaInicio: showUrgencia ? (urgenciaInicio ? 'URG1' : 'URG0') : null,
+      urgenciaInicio: urgenciaInicio === true ? 'URG1' : urgenciaInicio === false ? 'URG0' : null,
       nptOsmExtrema: nptOsmExtrema === true,
       incompatibles: incompatibles === true,
     });
