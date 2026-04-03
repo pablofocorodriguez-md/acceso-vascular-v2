@@ -69,6 +69,25 @@ export function decidirAdulto({ duracion, terapias, venas, hemodinamico, irc, do
     return result;
   }
 
+  // D3 + requiereCentral
+  if (duracion === "D3" && requiereCentral) {
+    result.main = "PICC";
+    result.servicio = "Angiograf\u00eda";
+    result.source = "MAGIC 2015; ASPEN 2016";
+    setPICC(result, irc, doubleLumen);
+    return result;
+  }
+
+  // D4 + requiereCentral
+  if (duracion === "D4" && requiereCentral) {
+    result.main = "PICC o Hickman";
+    result.servicio = "Angiograf\u00eda / Cirug\u00eda";
+    result.alt = "Hickman preferible si duraci\u00f3n > 6 meses";
+    result.source = "MAGIC 2015; ASPEN 2016";
+    setPICC(result, irc, doubleLumen);
+    return result;
+  }
+
   // C0 — D1 + irritante
   if (duracion === "D1" && terapias.includes("irritante")) {
     result.main = "PICC";
@@ -95,6 +114,15 @@ export function decidirAdulto({ duracion, terapias, venas, hemodinamico, irc, do
     return result;
   }
 
+  // C4 — D2 + irritante (antes de C3 para que irritante siempre prevalezca)
+  if (duracion === "D2" && terapias.includes("irritante")) {
+    result.main = "PICC";
+    result.servicio = "Angiograf\u00eda";
+    result.source = "MAGIC 2015; INS 2021";
+    setPICC(result, irc, doubleLumen);
+    return result;
+  }
+
   // C3 — D2 + estándar + V1/V2
   if (duracion === "D2" && terapias.includes("estandar") && (venas === "V1" || venas === "V2")) {
     result.main = "Midline";
@@ -109,15 +137,6 @@ export function decidirAdulto({ duracion, terapias, venas, hemodinamico, irc, do
     result.servicio = "Angiograf\u00eda";
     result.alt = "PICC si el midline no es viable por agotamiento severo";
     result.source = "MAGIC 2015";
-    return result;
-  }
-
-  // C4 — D2 + irritante
-  if (duracion === "D2" && terapias.includes("irritante")) {
-    result.main = "PICC";
-    result.servicio = "Angiograf\u00eda";
-    result.source = "MAGIC 2015; INS 2021";
-    setPICC(result, irc, doubleLumen);
     return result;
   }
 
