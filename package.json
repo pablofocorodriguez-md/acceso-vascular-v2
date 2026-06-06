@@ -1,7 +1,8 @@
 {
-  "name": "acceso-vascular",
+  "name": "acceso-vascular-v2",
   "private": true,
-  "version": "0.0.0",
+  "version": "2.0.0",
+  "description": "Aplicacion web de soporte a la decision clinica para seleccion de accesos vasculares intravenosos.",
   "type": "module",
   "scripts": {
     "dev": "vite",
